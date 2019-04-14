@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">TvAndMovieDetective</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Tv &amp; Movie Detective</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_title">Search</string>
+    <string name="movie_detail_image_des">Movie poster</string>
+    <string name="facebook_app_id">2197533486969708</string>
+    <string name="fb_login_protocol_scheme">fb2197533486969708</string>
+    <string name="menuLogOut">Log out</string>
+    <string name="empty"></string>
+    <string name="no_internet">No internet connection</string>
+    <string name="buttonAddToWatched">Add to Watch list</string>
+    <string name="buttonAddToWantWatch">Add to Wish list</string>
+    <string name="Episode_button">Episodes</string>
+    <string name="AddToFavourite">Add to favourite</string>
+    <string name="cast">Cast</string>
+
+    <string name="cities_prompt">Choose a city</string>
+    <string name="theatres_prompt">Choose a theatre</string>
+    <string-array name="cities_array">
+        <item>Choose city</item>
+        <item>Bratislava</item>
+        <item >Košice</item>
+        <item >Trnava</item>
+        <item>Banská Bystrica</item>
+        <item>Nitra</item>
+        <item>Prešov</item>
+        <item>Trenčín</item>
+        <item>Žilina</item>
+        <item>Bánovce nad Bebravou</item>
+        <item>Banská Štiavnica</item>
+        <item>Bardejovské Kúpele</item>
+        <item>Brezno</item>
+        <item>Bytča</item>
+        <item>Častá</item>
+        <item>Detva</item>
+        <item>Dolný Kubín</item>
+        <item>Dunajská Streda</item>
+        <item>Galanta</item>
+        <item>Handlová</item>
+        <item>Hlohovec</item>
+        <item>Hriňová</item>
+        <item>Humenné</item>
+        <item>Kežmarok</item>
+        <item>Kremnica</item>
+        <item>Krupina</item>
+        <item>Kysucké Nové Mesto</item>
+        <item>Levice</item>
+        <item>Levoča</item>
+        <item>Liptovský Mikuláš</item>
+        <item>Lučenec</item>
+        <item>Malacky</item>
+        <item>Martin</item>
+        <item>Michalovce</item>
+        <item>Modra</item>
+        <item>Myjava</item>
+        <item>Námestovo</item>
+        <item>Nová Dubnica</item>
+        <item>Nováky</item>
+        <item>Nové Mesto nad Váhom</item>
+        <item>Nové Zámky</item>
+        <item>Nový Smokovec</item>
+        <item>Partizánske</item>
+        <item>Pezinok</item>
+        <item>Piešťany</item>
+        <item>Poprad</item>
+        <item>Prievidza</item>
+        <item>Púchov</item>
+        <item>Revúca</item>
+        <item>Rimavská Sobota</item>
+        <item>Ružomberok</item>
+        <item>Sabinov</item>
+        <item>Senec</item>
+        <item>Senica</item>
+        <item>Sereď</item>
+        <item>Skalica</item>
+        <item>Snina</item>
+        <item>Sobrance</item>
+        <item>Spišská N. Ves</item>
+        <item>Stará Ľubovňa</item>
+        <item>Stupava</item>
+        <item>Svidník</item>
+        <item>Šaľa</item>
+        <item>Štúrovo</item>
+        <item>Tatranská Lomnica</item>
+        <item>Topoľčany</item>
+        <item>Trebišov</item>
+        <item>Trenčianske Teplice</item>
+        <item>Turčianske Teplice</item>
+        <item>Turzovka</item>
+        <item>Tvrdošín</item>
+        <item>Veľký Krtíš</item>
+        <item>Vráble</item>
+        <item>Vranov nad Topľou</item>
+        <item>Zlaté Moravce</item>
+        <item>Zvolen</item>
+        <item>Žarnovica</item>
+        <item>Žiar nad Hronom</item>
+    </string-array>
+</resources>

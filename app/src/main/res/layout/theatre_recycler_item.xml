@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/karticka"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/parent_layoutItem3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/itemImage2"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="start"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingRight="1dp"
+            android:paddingBottom="1dp"
+            android:text="Aquaman"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/times_the"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/theatre_date" />
+
+        <TextView
+            android:id="@+id/lenght"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:text="PG-13"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/times_the"
+            app:layout_constraintHorizontal_bias="0.882"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pg"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/pg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:text="115 min."
+            app:layout_constraintEnd_toStartOf="@+id/times_the"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/friend_name" />
+
+        <TextView
+            android:id="@+id/times_the"
+            android:layout_width="126dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="8dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/theatre_date"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/theatre_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:text="Today"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
