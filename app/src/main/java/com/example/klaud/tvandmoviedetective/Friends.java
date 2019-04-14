@@ -84,7 +84,7 @@ public class Friends extends Fragment {
         MainActivity.editor.putString("search", "");
         items.clear();
         MainActivity.editor.apply();
-        isVisibleFragment = false;
+        //isVisibleFragment = false;
 
     }
 
@@ -129,7 +129,7 @@ public class Friends extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myFriendsItems.clear();
                 data = dataSnapshot;
-                if (isVisibleFragment == false) return;
+                //if (isVisibleFragment == false) return;
                 friends.clear();
                 friendsEmails.clear();
                 for (DataSnapshot ds : data.child(maiil + "/settings/friends").getChildren()) {
