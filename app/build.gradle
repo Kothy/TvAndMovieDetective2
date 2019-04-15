@@ -47,6 +47,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-messaging:17.3.2'
 
+    //implementation 'hyogeun.github.com.colorratingbar:ColorRatingBar:1.0.1'
+
 }
 apply plugin: 'com.google.gms.google-services'
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

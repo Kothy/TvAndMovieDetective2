@@ -63,6 +63,8 @@ public class MovieDetail extends Fragment {
     DataSnapshot data;
     ProgressDialog progressDialog;
     Date release_date;
+    static Boolean first = true;
+
     AsyncTask<String, Integer, String> getJsonString = new AsyncTask<String, Integer, String>() {
         @Override
         protected void onPreExecute() {
@@ -260,6 +262,7 @@ public class MovieDetail extends Fragment {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.setMax(100);
+        MainActivity.noInt.setVisibility(View.INVISIBLE);
 
         overview = view.findViewById(R.id.overview);
         tv_rating = view.findViewById(R.id.tv_rating);
@@ -287,25 +290,42 @@ public class MovieDetail extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 data = dataSnapshot;
                 inList.setText("Nowhere");
+
                 wantToWatchButton.setVisibility(View.VISIBLE);
                 watchedButton.setVisibility(View.VISIBLE);
                 ratingBar.setVisibility(View.GONE);
                 tv_my_rating.setVisibility(View.GONE);
 
-                if (data.hasChild(movieId + "/rating")) {
-                    String rating = data.child(movieId + "/rating").getValue().toString();
-                    //Toast.makeText(ctx, "rating je:"+rating+"**", Toast.LENGTH_SHORT).show();
-                    //ratingBar.setRating(Float.valueOf(data.child("rating").getValue().toString()));
+                Boolean beforePremiere = false;
+                if (dataSnapshot.hasChild(movieId + "/release_date") && !dataSnapshot.child(movieId + "/release_date").equals("")){
+                    Long release_date = Long.decode(dataSnapshot.child(movieId + "/release_date").getValue().toString());
+                    if (System.currentTimeMillis() < release_date) beforePremiere = true;
                 }
+                String rating = "";
+                if (data.hasChild(movieId + "/rating") && !data.child(movieId + "/rating").getValue().toString().equals("")){
+                    rating = data.child(movieId + "/rating").getValue().toString();
+                    //Toast.makeText(ctx, "" + Float.valueOf(rating), Toast.LENGTH_SHORT).show();
+                    ratingBar.setRating(Float.valueOf(rating));
+                }
+
                 if (data.hasChild(movieId + "/status") && data.child(movieId + "/status").getValue().equals("want")) {
                     inList.setText("Wish list");
-                    wantToWatchButton.setVisibility(View.INVISIBLE);
-                    watchedButton.setVisibility(View.VISIBLE);
-                    ratingBar.setVisibility(View.GONE);
-                    tv_my_rating.setVisibility(View.GONE);
+                    if (beforePremiere){
+                        wantToWatchButton.setVisibility(View.GONE); // wish list button
+                        watchedButton.setVisibility(View.GONE);
+                        ratingBar.setVisibility(View.GONE);
+                        tv_my_rating.setVisibility(View.GONE);
 
-                } else if (data.hasChild(movieId + "/status") && data.child(movieId + "/status").getValue().equals("watched")) {
-                    inList.setText("Watch list");
+                    } else {
+                        wantToWatchButton.setVisibility(View.INVISIBLE); // wish list button
+                        watchedButton.setVisibility(View.VISIBLE);
+                        ratingBar.setVisibility(View.GONE);
+                        tv_my_rating.setVisibility(View.GONE);
+                    }
+
+                } else if  (data.hasChild(movieId + "/status") && data.child(movieId + "/status").getValue().equals("watched")) {
+                    inList.setText("Watched list");
+                    wantToWatchButton.setVisibility(View.VISIBLE); // wish list button
                     watchedButton.setVisibility(View.INVISIBLE);
                     ratingBar.setVisibility(View.VISIBLE);
                     tv_my_rating.setVisibility(View.VISIBLE);
@@ -319,16 +339,23 @@ public class MovieDetail extends Fragment {
         });
 
 
+
         ratingBar.setOnRatingBarChangeListener((rat, num, user) -> {
-            Toast.makeText(ctx, "You rated " + title + " " + num, Toast.LENGTH_SHORT).show();
+            if (first == false) {
+                Toast.makeText(ctx, "You rated " + title + " " + num, Toast.LENGTH_SHORT).show();
+                return ;
+            }
+
+            first = false;
+
             FirebaseDatabase db = FirebaseDatabase.getInstance();
             DatabaseReference dbRef = db.getReference("/users/" + maiil + "/movies/" + movieId);
             Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put("status", "watched");
-            childUpdates.put("title", title);
-            childUpdates.put("poster_path", poster_path);
+            //childUpdates.put("status", "watched");
+            //childUpdates.put("title", title);
+            //childUpdates.put("poster_path", poster_path);
             childUpdates.put("rating", "" + num);
-            childUpdates.put("release_date", release_date.getTime() + "");
+            //childUpdates.put("release_date", release_date.getTime() + "");
             dbRef.updateChildren(childUpdates);
 
             dbRef = db.getReference("/users/" + maiil + "/recent/");

@@ -1,6 +1,5 @@
-package com.example.klaud.tvandmoviedetective;
+package com.example.klaud.tvandmoviedetective.Service;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -11,14 +10,14 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
+import com.example.klaud.tvandmoviedetective.MainActivity;
+import com.example.klaud.tvandmoviedetective.R;
 import com.google.firebase.database.DataSnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -49,9 +48,6 @@ public class BackService extends Worker {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.ctx);
         notificationManager.notify(randomId, builder.build());
-
-
-
     }
 
     private void createNotificationChannel() {
@@ -63,7 +59,6 @@ public class BackService extends Worker {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
 
     @NonNull
     @Override
@@ -115,13 +110,9 @@ public class BackService extends Worker {
         protected String doInBackground(String... strings) {
             //httppost.setHeader("Authorization", "Bearer "+accessToken);
 
-
-
             return null;
         }
         private void readJSONObjectFromUrlPOST(String text, String title) throws IOException, JSONException {
-
-
             MainActivity.getFirebaseRegistationId();
 
             // 1. URL
