@@ -5,6 +5,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Looper;
 
+import com.example.klaud.tvandmoviedetective.Fragments.MovieDetail;
+import com.example.klaud.tvandmoviedetective.Fragments.SeriesDetails;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;

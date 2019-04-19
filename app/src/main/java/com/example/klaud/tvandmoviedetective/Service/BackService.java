@@ -72,7 +72,7 @@ public class BackService extends Worker {
                             if (movie.hasChild("release_date")) {
                                 Long movieMillisec = Long.decode(movie.child("release_date").getValue().toString());
 
-                                //sendNotification("SENT FROM BACKSERVICE", movie.child("title").getValue().toString());
+                                //setIntent("SENT FROM BACKSERVICE", movie.child("title").getValue().toString());
 
                                 if (movieMillisec > System.currentTimeMillis()) {
 
@@ -101,60 +101,6 @@ public class BackService extends Worker {
         } else {
             Log.d("POKUS", "Worker's job is done.");
             return Result.RETRY;
-        }
-    }
-
-    public static class sendNotif extends AsyncTask<String, String, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            //httppost.setHeader("Authorization", "Bearer "+accessToken);
-
-            return null;
-        }
-        private void readJSONObjectFromUrlPOST(String text, String title) throws IOException, JSONException {
-            MainActivity.getFirebaseRegistationId();
-
-            // 1. URL
-            URL url = new URL("https://android.googleapis.com/gcm/send");
-            // 2. Open connection
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            // 3. Specify POST method
-            urlConnection.setRequestMethod("POST");
-            // 4. Set the headers
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setRequestProperty("Authorization", "key=AIzaSyA6lAr4jnly1EtHpNfB1i_8Z12EcUvAudg");
-            urlConnection.setDoOutput(true);
-            // 5. Add JSON data into POST request body
-            JSONObject obj = null;
-            String json= "{\"data\": {" +
-                    "\"title\": \"" + title + "\"," +
-                    "\"text\": \""+ text + "\"" +
-                    "}," +
-                    "\"to\" : \"" + MainActivity.prefs.getString("FToken", "") + "\"" +
-                    "}";
-            try {
-                obj = new JSONObject(json);
-                //Log.d("VZORJSONA", obj.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            // 6. Get connection output stream
-            OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
-            out.write(obj.toString());
-            out.close();
-            // 6. Get the response
-            /*int responseCode = urlConnection.getResponseCode();
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();*/
-            //Log.d("GCM getResponseCode:", new Integer(responseCode).toString());
-
         }
     }
 }

@@ -5,6 +5,9 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
+import com.example.klaud.tvandmoviedetective.Fragments.Theatres;
+import com.example.klaud.tvandmoviedetective.Items.TheatresItem;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

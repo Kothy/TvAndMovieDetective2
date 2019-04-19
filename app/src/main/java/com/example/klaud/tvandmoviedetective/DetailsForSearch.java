@@ -2,6 +2,9 @@ package com.example.klaud.tvandmoviedetective;
 
 import android.os.AsyncTask;
 
+import com.example.klaud.tvandmoviedetective.Fragments.MoviesResultSearch;
+import com.example.klaud.tvandmoviedetective.Fragments.TvSeriesResultSearch;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

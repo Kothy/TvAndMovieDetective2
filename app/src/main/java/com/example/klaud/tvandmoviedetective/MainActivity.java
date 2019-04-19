@@ -43,7 +43,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.klaud.tvandmoviedetective.Adapters.ViewPagerAdapter;
+import com.example.klaud.tvandmoviedetective.Fragments.EmptyFragment;
+import com.example.klaud.tvandmoviedetective.Fragments.Episodes;
+import com.example.klaud.tvandmoviedetective.Fragments.Facebook;
+import com.example.klaud.tvandmoviedetective.Fragments.Friends;
+import com.example.klaud.tvandmoviedetective.Fragments.MovieDetail;
+import com.example.klaud.tvandmoviedetective.Fragments.MoviesResultSearch;
+import com.example.klaud.tvandmoviedetective.Fragments.MyMovies;
+import com.example.klaud.tvandmoviedetective.Fragments.MyMoviesWatched;
+import com.example.klaud.tvandmoviedetective.Fragments.MySeries;
+import com.example.klaud.tvandmoviedetective.Fragments.SeriesDetails;
+import com.example.klaud.tvandmoviedetective.Fragments.Settings;
+import com.example.klaud.tvandmoviedetective.Fragments.Theatres;
+import com.example.klaud.tvandmoviedetective.Fragments.TvSeriesResultSearch;
+import com.example.klaud.tvandmoviedetective.Fragments.UserProfile;
 import com.example.klaud.tvandmoviedetective.Service.BackService;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,6 +71,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,11 +102,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static DrawerLayout drawer;
     public static TextView noInt;
     public static String mail = null;
+    public static String nickname = "";
     public static Context ctx;
     public static AppBarLayout appbar;
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
-    static FragmentManager fragManager;
+    public static FragmentManager fragManager;
     public static NotificationManager notificationManager;
     public static DataSnapshot dataSnap;
     DownloadManager downloadManager;
@@ -97,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressDialog pd;
     String st[] = {"movie_ids_", "tv_series_ids_", "person_ids_"};
     SearchView searchView;
-    ConstraintLayout mainLay;
+    public static ConstraintLayout mainLay;
     Boolean isEmptyFragVisible = false;
     DatabaseReference dbRef;
     AsyncTask<String, Integer, String> unpack = new AsyncTask<String, Integer, String>() {
@@ -201,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onResume() {
+
         super.onResume();
         //Snackbar.make(mainLay, "onResume() main", Snackbar.LENGTH_LONG).show();
         if (isInternet()) {
@@ -208,38 +227,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 checkIfExistFileAndUnpack();
             }
         }
+        Fragment fragment = null;
+        Bundle bundle = new Bundle();
+        if (MainActivity.prefs.getString("openFrag","--").equals("movie")){
+
+            //Toast.makeText(ctx, ""+MainActivity.prefs.getString("openFragTitle","--")+ " -- zobrazujem film", Toast.LENGTH_SHORT).show();
+            fragment = new MovieDetail();
+            bundle.putString("title", MainActivity.prefs.getString("openFragTitle", ""));
+            bundle.putString("id", MainActivity.prefs.getString("openFragId", ""));
+            fragment.setArguments(bundle);
 
 
-    }
 
-    public void sendToServer() throws IOException, JSONException {
+        } else if (MainActivity.prefs.getString("openFrag","--").equals("series")){
 
-
-    }
-
-    public void sendNotification(String text, String title) {
-        createNotificationChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ctx, "9999")
-                .setSmallIcon(R.drawable.ic_delete_black_24dp)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(text))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        Random rand = new Random();
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.ctx);
-        notificationManager.notify((rand.nextInt((100000000 - 1) + 1) + 1), builder.build());
-
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("9999", "NotifChannel", importance);
-            channel.setDescription("Notifications for TvAndMovieDetective");
-            NotificationManager notificationManager = MainActivity.notificationManager;
-            notificationManager.createNotificationChannel(channel);
+            //Toast.makeText(ctx, ""+MainActivity.prefs.getString("openFragTitle","--") + " -- zobrazujem serial", Toast.LENGTH_SHORT).show();
+            fragment = new SeriesDetails();
+            bundle.putString("title", MainActivity.prefs.getString("openFragTitle", ""));
+            bundle.putString("id", MainActivity.prefs.getString("openFragId", ""));
+            fragment.setArguments(bundle);
         }
+        replaceFragmnet(fragment);
+        MainActivity.editor.putString("openFrag", "");
+        MainActivity.editor.putString("openFragTitle","");
+        MainActivity.editor.putString("openFragId", "");
+        MainActivity.editor.apply();
     }
 
     @Override
@@ -250,7 +262,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
 
-        Log.d("TIME", System.currentTimeMillis() + "");
+        //Log.d("TIME", System.currentTimeMillis() + "");
+
+        Toast.makeText(ctx, "onCreate()", Toast.LENGTH_SHORT).show();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             notificationManager = getSystemService(NotificationManager.class);
@@ -261,10 +275,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();*/
 
-        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(BackService.class, 1, TimeUnit.MINUTES)
+        /*PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(BackService.class, 1, TimeUnit.MINUTES)
                 //.setConstraints(constraints)
                 .build();
-        WorkManager.getInstance().enqueue(periodicWork);
+        WorkManager.getInstance().enqueue(periodicWork);*/
         //----------------------------------------------------
 
         fragManager = getSupportFragmentManager();
@@ -384,75 +398,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 dataSnap = dataSnapshot;
-                /*if (MainActivity.dataSnap.hasChild("movies")) {
-                    DataSnapshot movies = MainActivity.dataSnap.child("movies");
-                    for (DataSnapshot movie : movies.getChildren()) {
-                        if (movie.hasChild("status") && movie.child("status").getValue().toString().equals("want")) {
-                            if (movie.hasChild("release_date")) {
-                                Long movieMillisec = Long.decode(movie.child("release_date").getValue().toString());
-                                if (movieMillisec > System.currentTimeMillis()) {
 
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                MainActivity.nickname = dataSnapshot.child("settings/nickname").getValue().toString();
+                if (nickname.equals("")){
+                    MainActivity.nickname = dataSnapshot.getKey().split("@")[0];
+                }
 
-                                    Date currDate = new Date(System.currentTimeMillis());
-                                    Date movieDate = new Date(movieMillisec);
-
-                                    Calendar c2 = Calendar.getInstance();
-                                    c2.setTime(currDate);
-                                    c2.add(Calendar.DATE, +2);
-                                    currDate = c2.getTime();
-
-                                    if (sdf.format(movieDate).equals(sdf.format(currDate))) {
-
-                                        sendNotification("In theatres in 2 days.", movie.child("title").getValue().toString());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }*/
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
-
-        MainActivity.getFirebaseRegistationId();
-        String title = "TEST NOTIF";
-        String text = "TESTOVACIA NOTIFIKACIA";
-        String json= "{\"data\": {" +
-                "\"title\": \"" + title + "\"," +
-                "\"text\": \""+ text + "\"" +
-                "}," +
-                "\"to\" : \"" + MainActivity.prefs.getString("FToken", "") + "\"" +
-                "}";
-        try {
-            JSONObject obj = new JSONObject(json);
-            Log.d("VZORJSONA", obj.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
     }
 
-    public static void getFirebaseRegistationId(){
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+    public static void subscribe(String topicName){
+        FirebaseMessaging.getInstance().subscribeToTopic(topicName.replace("@", "~"))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Log.e("token", "getInstanceId failed", task.getException());
-                        }
-                        MainActivity.editor.putString("FToken", task.getResult().getToken()).apply();
 
-                        Log.d("FirebaseToken", task.getResult().getToken());
+                        }
+                        Log.d("Subscribe", MainActivity.prefs.getString("login", "").replace(".", "_") + " subscribed topic "+ topicName.replace("@", "~"));
+                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
-
 
 
     private void checkIfExistFileAndUnpack() {
@@ -545,6 +517,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             fragment = new Facebook();
         }
+        replaceFragmnet(fragment);
+    }
+
+    public void replaceFragmnet(Fragment fragment){
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);

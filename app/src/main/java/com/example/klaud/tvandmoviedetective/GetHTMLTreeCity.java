@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.Log;
 
+import com.example.klaud.tvandmoviedetective.Fragments.Theatres;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
