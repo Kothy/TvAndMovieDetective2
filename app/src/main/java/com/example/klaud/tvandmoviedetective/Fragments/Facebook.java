@@ -59,7 +59,6 @@ public class Facebook extends Fragment {
     }
 
     private static void handleLogin(String mai) {
-
         mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithEmailAndPassword(mai, "000000")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -77,40 +76,25 @@ public class Facebook extends Fragment {
     }
 
     private static void handleRegister(String mai) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference("users/" + MainActivity.mail.replace(".", "_") + "/settings");
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("private", "false");
-        childUpdates.put("nickname", "");
-        childUpdates.put("friends", "");
-        dbRef.updateChildren(childUpdates);
-        mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(mai, "000000")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //Toast.makeText(ctx, "Uspesne zaregistrovany pouzivatel", Toast.LENGTH_SHORT).show();
 
-                            //Toast.makeText(MainActivity.ctx, mai+" mail v registracii", Toast.LENGTH_SHORT).show();
-                            String mail = mai.replace(".","_").replace("@","~");
-                            FirebaseMessaging.getInstance().subscribeToTopic(mail)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            String msg = "Subscription completed";
-                                            if (!task.isSuccessful()) {
-                                                Log.e("Subscription", "Subscription failed");
-                                            } else {
-                                                Log.d("Subscription", msg);
-                                            }
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference dbRef = database.getReference("users/" + MainActivity.mail.replace(".", "_") + "/settings");
 
-                                        }
-                                    });
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("private", "false");
+                            childUpdates.put("nickname", "");
+                            childUpdates.put("friends", "");
+                            dbRef.updateChildren(childUpdates);
+                            mAuth = FirebaseAuth.getInstance();
 
                         } else {
-                            Toast.makeText(MainActivity.ctx, "Uzivatel asi uz existuje alebo nastala chyba", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(MainActivity.ctx, "Uzivatel asi uz existuje alebo nastala chyba", Toast.LENGTH_SHORT).show();
                             handleLogin(mai);
                         }
                     }
@@ -122,7 +106,6 @@ public class Facebook extends Fragment {
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        //Log.d("ERROR FCB",object.toString());
                         try {
                             MainActivity.mail = object.getString("email");
                             email = object.getString("email");
@@ -131,8 +114,6 @@ public class Facebook extends Fragment {
                             View headerView = MainActivity.navigationView.getHeaderView(0);
                             TextView navUsername = (TextView) headerView.findViewById(R.id.drawerEmailTextView);
                             navUsername.setText(email);
-
-                            //Toast.makeText(MainActivity.ctx, ""+email, Toast.LENGTH_SHORT).show();
 
                             handleRegister(email);
 
@@ -170,7 +151,6 @@ public class Facebook extends Fragment {
             public void onSuccess(LoginResult loginResult) {
                 accessToken = AccessToken.getCurrentAccessToken();
                 setMailToDrawer();
-
                 openMovieFragment();
             }
 

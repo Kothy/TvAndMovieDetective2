@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Adapters.FriendsAdapter;
 import com.example.klaud.tvandmoviedetective.Adapters.MyFriendAdapter;
@@ -49,7 +50,6 @@ public class Friends extends Fragment {
 
     public static void searchResult(String query) {
         items.clear();
-
         if (data != null) {
             for (DataSnapshot ds : data.getChildren()) {
                 if (ds.hasChild("settings/private") && ds.child("settings/private").getValue().toString().equals("false")
@@ -132,6 +132,7 @@ public class Friends extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myFriendsItems.clear();
                 data = dataSnapshot;
+                myFriendsRec.setVisibility(View.VISIBLE);
                 //if (isVisibleFragment == false) return;
                 friends.clear();
                 friendsEmails.clear();
@@ -142,8 +143,7 @@ public class Friends extends Fragment {
                     friends.add(ds.getValue().toString());
 
                 }
-                //Toast.makeText(ctx, friends.toString(), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(ctx, friendsEmails.toString(), Toast.LENGTH_SHORT).show();
+
                 for (DataSnapshot friend : dataSnapshot.getChildren()) { // all users
                     if (friend.hasChild("recent")) {
                         if (friendsEmails.contains(friend.getKey())) {
@@ -167,9 +167,10 @@ public class Friends extends Fragment {
 
                 adapter2.notifyDataSetChanged();
                 myFriendsRec.invalidate();
-                /*if (myFriendsItems.size() == 0){
+                if (myFriendsItems.size() == 0){
+                    myFriendsRec.setVisibility(View.GONE);
                     Toast.makeText(ctx, "You have no friends. :'( \nClick to magnifying glass to find one.", Toast.LENGTH_LONG).show();
-                }*/
+                }
             }
 
             @Override

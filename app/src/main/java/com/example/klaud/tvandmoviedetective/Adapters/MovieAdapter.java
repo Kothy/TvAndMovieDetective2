@@ -82,20 +82,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             DrawerLayout drawer = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
         });
-        /*holder.parentLayout.setOnLongClickListener((click) ->{
-            SharedPreferences prefs= MainActivity.prefs;
-            if (prefs.getString("class","").equals("MyMovies") || prefs.getString("class","").equals("MyMoviesWatched")){
-
-                String mai=MainActivity.mail.replace(".","_");
-                FirebaseDatabase.getInstance().getReference("/users/"+mai+"/movies/"+items.get(position).getId()).removeValue();
-
-                items.remove(position);
-                notifyDataSetChanged();
-                if (MyMovies.recycler != null) MyMovies.recycler.invalidate();
-                if (MyMoviesWatched.recycler != null) MyMoviesWatched.recycler.invalidate();
-            }
-            return true;
-        });*/
 
     }
 
