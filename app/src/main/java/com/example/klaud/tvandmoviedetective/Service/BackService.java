@@ -3,7 +3,6 @@ package com.example.klaud.tvandmoviedetective.Service;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -14,13 +13,6 @@ import com.example.klaud.tvandmoviedetective.MainActivity;
 import com.example.klaud.tvandmoviedetective.R;
 import com.google.firebase.database.DataSnapshot;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +29,8 @@ public class BackService extends Worker {
 
     public void sendNotification(String text, String title) {
         createNotificationChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.ctx, "9999")
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(MainActivity.ctx, "99999")
                 .setSmallIcon(R.drawable.ic_search_black_24dp)
                 .setContentTitle(title)
                 .setContentText(text)
@@ -46,14 +39,15 @@ public class BackService extends Worker {
         Random rnd = new Random();
         Integer randomId = rnd.nextInt((10000000 - 1) + 1) + 1;
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(MainActivity.ctx);
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(MainActivity.ctx);
         notificationManager.notify(randomId, builder.build());
     }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("9999", "NotifChannel", importance);
+            NotificationChannel channel = new NotificationChannel("99999",
+                    "NotifChannel2", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Blah Blah Notification");
             NotificationManager notificationManager = MainActivity.notificationManager;
             notificationManager.createNotificationChannel(channel);
@@ -65,31 +59,33 @@ public class BackService extends Worker {
     public Result doWork() {
         if (MainActivity.dataSnap != null) {
             if (MainActivity.dataSnap.hasChild("movies")) {
-                if (MainActivity.dataSnap.hasChild("movies")) {
-                    DataSnapshot movies = MainActivity.dataSnap.child("movies");
-                    for (DataSnapshot movie : movies.getChildren()) {
-                        if (movie.hasChild("status") && movie.child("status").getValue().toString().equals("want")) {
-                            if (movie.hasChild("release_date")) {
-                                Long movieMillisec = Long.decode(movie.child("release_date").getValue().toString());
+                DataSnapshot movies = MainActivity.dataSnap.child("movies");
+                for (DataSnapshot movie : movies.getChildren()) {
+                    if (movie.hasChild("status") && movie.child("status").getValue().toString().equals("want")) {
+                        if (movie.hasChild("release_date")) {
+                            Long movieMillisec = Long.decode(movie.child("release_date").getValue().toString());
 
-                                //setIntent("SENT FROM BACKSERVICE", movie.child("title").getValue().toString());
+                            //setIntent("SENT FROM BACKSERVICE", movie.child("title").getValue().toString());
 
-                                if (movieMillisec > System.currentTimeMillis()) {
+                            if (movieMillisec > System.currentTimeMillis()) {
+                                int days_before = MainActivity.getDaysBefore();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                                Date currDate = new Date(System.currentTimeMillis());
+                                Date movieDate = new Date(movieMillisec);
 
-                                    Date currDate = new Date(System.currentTimeMillis());
-                                    Date movieDate = new Date(movieMillisec);
+                                Calendar c2 = Calendar.getInstance();
+                                c2.setTime(currDate);
+                                c2.add(Calendar.DATE, + days_before);
+                                currDate = c2.getTime();
 
-                                    Calendar c2 = Calendar.getInstance();
-                                    c2.setTime(currDate);
-                                    c2.add(Calendar.DATE, +2);
-                                    currDate = c2.getTime();
+                                Log.d("POKUS", sdf.format(movieDate) + " = " + sdf.format(currDate));
 
-                                    if (sdf.format(movieDate).equals(sdf.format(currDate))) {
+                                if (sdf.format(movieDate).equals(sdf.format(currDate))) {
 
-                                        sendNotification("In theatres in 2 days. SENT FROM BACKSERVICE", movie.child("title").getValue().toString());
-                                    }
+                                    sendNotification("In theatres in " + days_before
+                                                    + " days. SENT FROM BACKSERVICE",
+                                            movie.child("title").getValue().toString());
                                 }
                             }
                         }

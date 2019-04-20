@@ -57,7 +57,7 @@ public class SeriesDetails extends Fragment {
     public static ImageView seriesPoster;
     public static Context ctx;
     TextView tv, genresTv, lastAirTv, ratingTv, seasonsTv, episodesCountTv,
-            networkTv, genresTitleTv, inProductionTv, myRatingTitleTv, lastAirDateTitleTv,
+            networkTv, genresTitleTv, inProductionTv, myRatingTitleTv, lastAirDateTitleTv, networkTitleTv,
             ratingTitleTv;
     ScrollView sv;
     Integer Id = 0;
@@ -141,8 +141,9 @@ public class SeriesDetails extends Fragment {
 
                 final float scale = getContext().getResources().getDisplayMetrics().density;
                 int numLines = genresTv.getLineCount();
+                int pixels;
                 if (numLines > 1) {
-                    int pixels = (int) ((genresTv.getLineCount() * 24) * scale + 0.5f);
+                    pixels = (int) ((genresTv.getLineCount() * 24) * scale + 0.5f);
                     genresTv.getLayoutParams().height = pixels;
                     genresTitleTv.getLayoutParams().height = pixels;
                 }
@@ -155,6 +156,13 @@ public class SeriesDetails extends Fragment {
                 } else {
                     ratingTitleTv.setVisibility(View.GONE);
                     ratingTv.setVisibility(View.GONE);
+                }
+
+                numLines = networkTv.getLineCount();
+                if (numLines > 1) {
+                    pixels = (int) ((networkTv.getLineCount() * 24) * scale + 0.5f);
+                    networkTv.getLayoutParams().height = pixels;
+                    networkTitleTv.getLayoutParams().height = pixels;
                 }
 
                 String date = jsonSeries.getString("last_air_date");
@@ -286,6 +294,7 @@ public class SeriesDetails extends Fragment {
         myRatingTitleTv = view.findViewById(R.id.textView24);
         lastAirDateTitleTv = view.findViewById(R.id.textView14);
         ratingTitleTv = view.findViewById(R.id.textView16);
+        networkTitleTv = view.findViewById(R.id.network_title_tv);
         first = true;
 
         ratingBar = view.findViewById(R.id.series_rating_bar);
@@ -326,8 +335,9 @@ public class SeriesDetails extends Fragment {
                     String rating = data.child(Id + "/rating").getValue().toString();
                     if (!rating.equals("")) {
                         ratingBar.setRating(Float.valueOf(rating));
-                    } else ratingBar.setRating(0);
-                } else ratingBar.setRating(0);
+                    }
+                }
+                first = false;
                 if (data.hasChild(Id + "")) {
                     addToFavouriteButton.setVisibility(View.INVISIBLE);
                     ratingBar.setVisibility(View.VISIBLE);
@@ -348,7 +358,6 @@ public class SeriesDetails extends Fragment {
 
         ratingBar.setOnRatingBarChangeListener((rat, num, user) -> {
             if (first == true) {
-                first = false;
                 return;
             }
 
@@ -365,6 +374,11 @@ public class SeriesDetails extends Fragment {
             childUpdates = new HashMap<>();
             childUpdates.put(System.currentTimeMillis() + "", " rated " + title + " " + num);
             dbRef.updateChildren(childUpdates);
+
+            if (MainActivity.sendMessages() == false){
+                Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             String id = String.valueOf(Id);
             String isMovie = "false";

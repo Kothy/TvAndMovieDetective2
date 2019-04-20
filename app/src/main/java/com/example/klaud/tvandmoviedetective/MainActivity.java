@@ -2,7 +2,6 @@ package com.example.klaud.tvandmoviedetective;
 
 import android.Manifest;
 import android.app.DownloadManager;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -29,8 +28,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -44,6 +41,7 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+//import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Adapters.ViewPagerAdapter;
 import com.example.klaud.tvandmoviedetective.Fragments.EmptyFragment;
@@ -69,12 +67,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -86,7 +79,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Random;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 
@@ -118,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ConstraintLayout mainLay;
     Boolean isEmptyFragVisible = false;
     DatabaseReference dbRef;
+
     AsyncTask<String, Integer, String> unpack = new AsyncTask<String, Integer, String>() {
         @Override
         protected void onPreExecute() {
@@ -262,10 +256,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         ctx = getApplicationContext();
 
-        //Log.d("TIME", System.currentTimeMillis() + "");
-
-        Toast.makeText(ctx, "onCreate()", Toast.LENGTH_SHORT).show();
-
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             notificationManager = getSystemService(NotificationManager.class);
         }
@@ -275,10 +265,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();*/
 
-        /*PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(BackService.class, 1, TimeUnit.MINUTES)
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(BackService.class, 1, TimeUnit.MINUTES)
                 //.setConstraints(constraints)
                 .build();
-        WorkManager.getInstance().enqueue(periodicWork);*/
+        WorkManager.getInstance().enqueue(periodicWork);
         //----------------------------------------------------
 
         fragManager = getSupportFragmentManager();
@@ -359,6 +349,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         new Thread(new Runnable() {
             public void run() {
+                //FirebaseMessaging.getInstance().unsubscribeFromTopic("test");
+                //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet_sk");
+                //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet.sk");
+                subscribe("test");
                 Boolean boo = false, foo = true;
                 Looper.prepare();
                 while (true) {
@@ -404,6 +398,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     MainActivity.nickname = dataSnapshot.getKey().split("@")[0];
                 }
 
+                if (dataSnapshot.hasChild("settings/send_notif")) {
+                    if (dataSnapshot.child("settings/send_notif").getValue().equals("false")) {
+                        MainActivity.editor.putString("send_notif", false + "");
+                    } else {
+                        MainActivity.editor.putString("send_notif", true + "");
+                    }
+                }
+
+                if (dataSnapshot.hasChild("settings/receive_notif")) {
+                    if (dataSnapshot.child("settings/receive_notif").getValue().equals("false")) {
+                        MainActivity.editor.putString("receive_notif", "false");
+                    } else {
+                        MainActivity.editor.putString("receive_notif", "true");
+                    }
+                }
+                if (dataSnapshot.hasChild("settings/days_before")) {
+                    int days_before = Integer.decode(dataSnapshot.child("settings/days_before").getValue().toString());
+                    Toast.makeText(MainActivity.this, "dni pred = " + days_before, Toast.LENGTH_SHORT).show();
+                    MainActivity.editor.putInt("days_before", days_before);
+
+                } else MainActivity.editor.putInt("days_before", 2);
+                MainActivity.editor.apply();
             }
 
             @Override
@@ -412,23 +428,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public static Boolean receiveMessages() { return MainActivity.prefs.getString("receive_notif", "").equals("true"); }
+    public static Boolean sendMessages() { return MainActivity.prefs.getString("send_notif", "").equals("true"); }
+    public static Integer getDaysBefore() { return MainActivity.prefs.getInt("days_before", 2); }
+
+    public static String editMail(String emaiil){
+        return emaiil.replace("@", "~").replace(".", "_");
+    }
     public static void subscribe(String topicName){
-        FirebaseMessaging.getInstance().subscribeToTopic(topicName.replace("@", "~"))
+        FirebaseMessaging.getInstance().subscribeToTopic(editMail(topicName))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-
+                            subscribe(topicName);
                         }
-                        Log.d("Subscribe", MainActivity.prefs.getString("login", "").replace(".", "_") + " subscribed topic "+ topicName.replace("@", "~"));
-                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        else {
+                            Log.d("Subscribe", MainActivity.prefs.getString("login", "")
+                                    .replace(".", "_") + " subscribed topic "
+                                    + editMail(topicName));
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference dbRef = database.getReference("/subscriptions/" + editMail(topicName));
+                            HashMap<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put(MainActivity.mail.replace(".", "_"), "*");
+                            dbRef.updateChildren(childUpdates);
+                        }
+
+
                     }
                 });
     }
 
 
     private void checkIfExistFileAndUnpack() {
-        if (!fileExist(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Detective/" + "movie_ids_" + getYesterdayDate() + ".json")
+        if (!fileExist(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                + "/Detective/" + "movie_ids_" + getYesterdayDate() + ".json")
                 && isInternet()) {
             if (pd.isShowing() == false) pd.show();
             noInt.setVisibility(View.INVISIBLE);

@@ -8,11 +8,11 @@
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="340dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="50dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="Nickname"
         android:inputType="textPersonName"
@@ -26,24 +26,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.908"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1" />
+        app:layout_constraintTop_toBottomOf="@+id/send_notif_switch" />
 
     <Switch
-        android:id="@+id/switch1"
-        android:layout_width="136dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="8dp"
+        android:id="@+id/private_acc_switch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:hapticFeedbackEnabled="true"
+        android:padding="10dp"
         android:text="Private account"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.969"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
 
@@ -52,10 +53,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="8dp"
         android:text="CLEAR RECENT"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.937"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button9" />
 
@@ -75,21 +77,41 @@
         android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="52dp"
+        android:padding="5dp"
         android:text="Notify days before: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
-    <Button
-        android:id="@+id/send_notif_button"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:text="Send Notification"
+    <Switch
+        android:id="@+id/receive_not_switch"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:fadeScrollbars="false"
+        android:hapticFeedbackEnabled="true"
+        android:padding="10dp"
+        android:text="Receive notifications from friends"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clear_recent_button" />
+        app:layout_constraintTop_toBottomOf="@+id/private_acc_switch" />
+
+    <Switch
+        android:id="@+id/send_notif_switch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="15dp"
+        android:hapticFeedbackEnabled="true"
+        android:padding="10dp"
+        android:text="Send notifications to friends"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/receive_not_switch" />
+
 </android.support.constraint.ConstraintLayout>

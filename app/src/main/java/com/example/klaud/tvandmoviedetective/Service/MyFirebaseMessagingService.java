@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.MainActivity;
 import com.example.klaud.tvandmoviedetective.MovieReceiver;
@@ -19,8 +20,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
-
 
     public void setIntent(String text, String notTitle, String id, String title, String rate, String isMovie, String friend) {
 
@@ -85,6 +84,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         final String TAG = "TestMess";
+
+        if (MainActivity.receiveMessages() == false) {
+            Toast.makeText(this, "Receive notif is switched off", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (remoteMessage.getData().size() > 0) {
             //Log.d(TAG, "Message data payload: " + remoteMessage.getData());

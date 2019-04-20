@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Adapters.EpisodeAdapter;
 import com.example.klaud.tvandmoviedetective.Storing.Episode;
@@ -84,6 +85,16 @@ public class Episodes extends Fragment {
 
         protected void onPostExecute(String result) {
             try {
+                if (result == null || result.equals("") || result.equals("null")){
+                    Toast.makeText(ctx, "This series have no episodes available.", Toast.LENGTH_SHORT).show();
+                    Season compa = new Season("Seasons", new ArrayList<>());
+                    companies.add(compa);
+
+                    adapter = new EpisodeAdapter(companies);
+                    recyclerView.setAdapter(adapter);
+
+                    return;
+                }
                 JSONObject jsonSeries = new JSONObject(result);
                 String seasonName = jsonSeries.getString("name");
                 String poster_path = jsonSeries.getString("poster_path");
@@ -164,7 +175,6 @@ public class Episodes extends Fragment {
         //Toast.makeText(ctx, "prev class: "+ MainActivity.prefs.getString("prev class",""), Toast.LENGTH_SHORT).show();
 
         MainActivity.appbar.setVisibility(View.INVISIBLE);
-
     }
 
     public Boolean isEpisodeChecked(Integer seriesId, String season, Integer epNum) {

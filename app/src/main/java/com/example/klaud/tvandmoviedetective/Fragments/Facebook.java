@@ -90,7 +90,11 @@ public class Facebook extends Fragment {
                             childUpdates.put("private", "false");
                             childUpdates.put("nickname", "");
                             childUpdates.put("friends", "");
+                            childUpdates.put("send_notif", "true");
+                            childUpdates.put("receive_notif", "true");
+                            childUpdates.put("days_before", "2");
                             dbRef.updateChildren(childUpdates);
+
                             mAuth = FirebaseAuth.getInstance();
 
                         } else {

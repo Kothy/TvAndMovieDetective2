@@ -316,8 +316,8 @@ public class MovieDetail extends Fragment {
                     rating = data.child(movieId + "/rating").getValue().toString();
                     //Toast.makeText(ctx, "" + Float.valueOf(rating), Toast.LENGTH_SHORT).show();
                     ratingBar.setRating(Float.valueOf(rating));
-                } else ratingBar.setRating(0);
-
+                }
+                first = false;
                 if (data.hasChild(movieId + "/status") && data.child(movieId + "/status").getValue().equals("want")) {
                     inList.setText("Wish list");
                     if (beforePremiere){
@@ -352,8 +352,6 @@ public class MovieDetail extends Fragment {
 
         ratingBar.setOnRatingBarChangeListener((rat, num, user) -> {
             if (first == true) {
-                //Toast.makeText(ctx, "You rated " + title + " " + num, Toast.LENGTH_SHORT).show();
-                first = false;
                 return ;
             }
 
@@ -369,13 +367,20 @@ public class MovieDetail extends Fragment {
             dbRef.updateChildren(childUpdates);
 
             Toast.makeText(ctx, "You rated " + title + " " + num, Toast.LENGTH_SHORT).show();
-            Toast.makeText(ctx, ""+MainActivity.nickname, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ctx, ""+MainActivity.nickname, Toast.LENGTH_SHORT).show();
 
             String id = String.valueOf(movieId);
             String isMovie = "true";
             String frieds_name = MainActivity.nickname;
             String rate = String.valueOf(num);
-            String regId = "/topics/test";
+            String regId = "/topics/" + MainActivity.editMail(MainActivity.mail);
+            //String regId = "/topics/test";
+            //Toast.makeText(ctx, "Message sent to all your friend " + regId, Toast.LENGTH_SHORT).show();
+
+            if (MainActivity.sendMessages() == false){
+                Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             try {
                 JSONObject mainJson = new JSONObject();

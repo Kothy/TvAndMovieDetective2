@@ -64,7 +64,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             childUpdates.put(items.get(position).email, items.get(position).nickname);
             dbRef.updateChildren(childUpdates);
 
-            //MainActivity.subscribe(items.get(position).email);
+
+
+            MainActivity.subscribe(items.get(position).email);
 
         });
         holder.parentLayout.setOnClickListener(click -> {
