@@ -34,9 +34,9 @@
             android:minLines="2"
             android:padding="5dp"
             android:text="Sample title"
+            android:textSize="12dp"
             android:textAlignment="textStart"
             android:textColor="@android:color/black"
-            android:textSize="12sp"
             />
 
     </LinearLayout>

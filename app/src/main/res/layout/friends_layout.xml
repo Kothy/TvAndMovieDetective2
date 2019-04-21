@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/friends_recycler"
@@ -56,6 +57,7 @@
         android:gravity="center_vertical"
         android:padding="4dp"
         android:text="My friends"
+        android:textSize="15dp"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.024"

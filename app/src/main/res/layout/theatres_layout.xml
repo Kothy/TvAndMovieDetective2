@@ -17,6 +17,7 @@
         android:background="@color/colorAccent"
         android:entries="@array/cities_array"
         android:popupBackground="@color/colorAccent"
+        android:textSize="15dp"
         android:prompt="@string/cities_prompt"
         app:layout_constraintEnd_toStartOf="@+id/spinner2"
         app:layout_constraintHorizontal_bias="0.0"
@@ -33,6 +34,7 @@
         android:entries="@array/cities_array"
         android:popupBackground="@color/colorAccent"
         android:prompt="@string/cities_prompt"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_optimizationLevel="chains" />
@@ -47,6 +49,7 @@
         android:layout_marginBottom="20dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -16,6 +16,7 @@
         android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="Nickname"
+        android:textSize="15dp"
         android:textColorHint="@color/white"
         android:inputType="textPersonName"
         android:textColor="@color/white"
@@ -32,6 +33,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
         android:text="Save"
+        android:textSize="15dp"
         android:background="@drawable/round_rectangle"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +51,7 @@
         android:hapticFeedbackEnabled="true"
         android:padding="10dp"
         android:text="Private account"
+        android:textSize="15dp"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +65,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="8dp"
         android:text="CLEAR RECENT"
+        android:textSize="15dp"
         android:background="@drawable/round_rectangle"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,6 +81,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="36dp"
         android:textColor="@color/white"
+        android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.761"
         app:layout_constraintStart_toEndOf="@+id/textView19"
@@ -91,6 +96,7 @@
         android:padding="5dp"
         android:text="Notify days before: "
         android:textColor="@color/white"
+        android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
 
@@ -107,6 +113,7 @@
         android:textColor="@color/white"
         android:text="Receive notifications from friends"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/private_acc_switch" />
 
@@ -120,6 +127,7 @@
         android:hapticFeedbackEnabled="true"
         android:padding="10dp"
         android:text="Send notifications to friends"
+        android:textSize="15dp"
         android:textColor="@color/white"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
