@@ -83,12 +83,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        final String TAG = "TestMess";
+        //final String TAG = "TestMess";
 
-        if (MainActivity.receiveMessages() == false) {
+        /*if (MainActivity.receiveMessages() == false) {
             Toast.makeText(this, "Receive notif is switched off", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
         if (remoteMessage.getData().size() > 0) {
             //Log.d(TAG, "Message data payload: " + remoteMessage.getData());

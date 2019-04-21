@@ -20,6 +20,7 @@ import com.example.klaud.tvandmoviedetective.DetailsForSearch;
 import com.example.klaud.tvandmoviedetective.Fragments.MovieDetail;
 import com.example.klaud.tvandmoviedetective.Items.MovieItem;
 import com.example.klaud.tvandmoviedetective.Fragments.MoviesResultSearch;
+import com.example.klaud.tvandmoviedetective.MainActivity;
 import com.example.klaud.tvandmoviedetective.R;
 import com.squareup.picasso.Picasso;
 
@@ -59,9 +60,12 @@ public class ResultSearchAdapter extends RecyclerView.Adapter<ResultSearchAdapte
         return holder;
     }
 
+
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.time.setText(items.get(position).getName());
+
         if (items.get(position).release_date == null) {
             holder.year.setText("");
         } else holder.year.setText(items.get(position).release_date);
@@ -81,7 +85,7 @@ public class ResultSearchAdapter extends RecyclerView.Adapter<ResultSearchAdapte
             fragment = new MovieDetail();
             Bundle bundle = new Bundle();
             bundle.putString("id", items.get(position).getId().toString());
-            bundle.putString("title", items.get(position).getName());// toto vlozi title s malymi pismenkami
+            bundle.putString("title", items.get(position).getName());
 
             fragment.setArguments(bundle);
             if (fragment != null) {

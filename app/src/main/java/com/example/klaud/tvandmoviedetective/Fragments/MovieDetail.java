@@ -374,13 +374,18 @@ public class MovieDetail extends Fragment {
             String frieds_name = MainActivity.nickname;
             String rate = String.valueOf(num);
             String regId = "/topics/" + MainActivity.editMail(MainActivity.mail);
+
+            //Toast.makeText(ctx, ""+regId, Toast.LENGTH_SHORT).show();
+
             //String regId = "/topics/test";
+            //String regId = "fKNrJcpS-Ew:APA91bFCBg1Ohe4ukj5L_VjLfyiwTq_XXIQmCZcd2KWfRejin03v91HRXeU99eprYEh5W4Rmn3M0b4NEAu6zw8iS_Dc0WiYTEXL6GZMF3zAX-W5VFuZ5nXzyrIldIMcyFaepXa9d_L2l";
+            //MainActivity.subscribe("test");
             //Toast.makeText(ctx, "Message sent to all your friend " + regId, Toast.LENGTH_SHORT).show();
 
-            if (MainActivity.sendMessages() == false){
+            /*if (MainActivity.sendMessages() == false){
                 Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }*/
 
             try {
                 JSONObject mainJson = new JSONObject();

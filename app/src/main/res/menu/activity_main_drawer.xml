@@ -7,7 +7,7 @@
         <item
             android:id="@+id/movie"
             android:icon="@drawable/ic_movie_black_24dp"
-            android:title="Movie" />
+            android:title="Movies" />
 
         <item
             android:id="@+id/nav_myMovies"
@@ -23,7 +23,6 @@
             android:id="@+id/nav_myTv"
             android:icon="@drawable/ic_tv_black_24dp"
             android:title="My Tv Series" />
-
     </group>
 
     <item android:title="Others">
@@ -40,5 +39,4 @@
 
         </menu>
     </item>
-
 </menu>

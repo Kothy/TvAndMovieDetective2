@@ -375,16 +375,19 @@ public class SeriesDetails extends Fragment {
             childUpdates.put(System.currentTimeMillis() + "", " rated " + title + " " + num);
             dbRef.updateChildren(childUpdates);
 
-            if (MainActivity.sendMessages() == false){
+            /*if (MainActivity.sendMessages() == false){
                 Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }*/
+
+            //MainActivity.subscribe("test");
 
             String id = String.valueOf(Id);
             String isMovie = "false";
             String frieds_name = MainActivity.nickname;
             String rate = String.valueOf(num);
-            String regId = "/topics/test";
+            String regId = "/topics/" + MainActivity.editMail(MainActivity.mail);
+
 
             try {
                 JSONObject mainJson = new JSONObject();

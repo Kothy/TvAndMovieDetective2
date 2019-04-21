@@ -43,6 +43,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,7 +60,7 @@ public class MoviesResultSearch extends Fragment {
     public static ArrayList<MovieItem> searchedItems = new ArrayList<>();
     public static ArrayList<String> postersOfSearch = new ArrayList<>();
     public static SimpleAdapter simpleAdapter;
-    public static ListView lv;
+    //public static ListView lv;
     public static Context ctx;
     public static RecyclerView recycler, recycler2, recycler3;
     public static MovieAdapter adapter, adapter2;
@@ -71,6 +72,7 @@ public class MoviesResultSearch extends Fragment {
     private static ArrayList<MovieItem> itemsInTheatres = new ArrayList<>();
     ProgressDialog pd;
     TextView theatresTitle, trendingTitle;//
+
     AsyncTask<String, Integer, String> getJsonInTheatres = new AsyncTask<String, Integer, String>() {
         @Override
         protected void onPreExecute() {
@@ -205,9 +207,10 @@ public class MoviesResultSearch extends Fragment {
             }
             searchedItems.clear();
             Collections.sort(found, compareJSONObject());
-            lv.setVisibility(View.INVISIBLE);
+            //lv.setVisibility(View.INVISIBLE);
             for (JSONObject js : found) {
-                MovieItem mi = new MovieItem(js.getString("original_title"), R.drawable.nopicture, js.getInt("id"));
+
+                MovieItem mi = new MovieItem(capitalizeAllWords(js.getString("original_title")), R.drawable.nopicture, js.getInt("id"));
                 mi.setPoster_path("null");
                 searchedItems.add(mi);
                 DetailsForSearch ds = new DetailsForSearch();
@@ -237,6 +240,25 @@ public class MoviesResultSearch extends Fragment {
             }
         };
         return comp;
+    }
+
+    public static String capitalizeAllWords(String words){
+        List <String> capitalaze = Arrays.asList(words.split(" "));
+        for (int i = 0; i < capitalaze.size(); i++){
+            capitalaze.set(i, capitalizeFirst(capitalaze.get(i)));
+        }
+        return joinList(capitalaze, " ");
+    }
+
+    public static String joinList(List<String> list, String delimiter){
+        String result = "";
+        for (String string : list) result += string + delimiter;
+        return result.substring(0, result.length() - delimiter.length());
+    }
+
+    public static String capitalizeFirst(String string){
+        if (string.length() == 0) return "";
+        return string.substring(0,1).toUpperCase() + string.substring(1);
     }
 
     @Nullable
@@ -292,10 +314,10 @@ public class MoviesResultSearch extends Fragment {
 
         String[] from = {"listview_image", "listview_title", "listview_description"};
         int[] to = {R.id.listview_image, R.id.listview_item_title, R.id.listview_item_short_description};
-        lv = (ListView) getView().findViewById(R.id.list);
+        //lv = (ListView) getView().findViewById(R.id.list);
 
         simpleAdapter = new SimpleAdapter(getActivity().getBaseContext(), aList, R.layout.listview_activity, from, to);
-        lv.setAdapter(simpleAdapter);
+        //lv.setAdapter(simpleAdapter);
         if (!MainActivity.prefs.getString("search", "").equals("")) {
             //lv.setVisibility(View.VISIBLE);
             recycler.setVisibility(View.INVISIBLE);
@@ -312,7 +334,7 @@ public class MoviesResultSearch extends Fragment {
             MainActivity.editor.apply();
 
         } else {
-            lv.setVisibility(View.INVISIBLE);
+            //lv.setVisibility(View.INVISIBLE);
             recycler.setVisibility(View.VISIBLE);
             recycler2.setVisibility(View.VISIBLE);
             recycler3.setVisibility(View.INVISIBLE);
@@ -329,7 +351,7 @@ public class MoviesResultSearch extends Fragment {
             //Toast.makeText(ctx, "mala by som zobrazit aktualne filmy", Toast.LENGTH_SHORT).show();
         }
 
-        lv.setOnItemClickListener((AdapterView<?> adapt, View viev, int pos, long arg3) -> {
+        /*lv.setOnItemClickListener((AdapterView<?> adapt, View viev, int pos, long arg3) -> {
             //Toast.makeText(getContext(), ""+pos, Toast.LENGTH_LONG).show();
             Fragment fragment = null;
             fragment = new MovieDetail();
@@ -344,7 +366,7 @@ public class MoviesResultSearch extends Fragment {
             }
             DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-        });
+        });*/
 
     }
 

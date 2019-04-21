@@ -34,6 +34,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +68,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.BufferedReader;
@@ -246,6 +249,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MainActivity.editor.putString("openFragTitle","");
         MainActivity.editor.putString("openFragId", "");
         MainActivity.editor.apply();
+
+        String TAG = "FToken";
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.d(TAG, "getInstanceId: " + token, task.getException());
+
+                        //Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -352,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //FirebaseMessaging.getInstance().unsubscribeFromTopic("test");
                 //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet_sk");
                 //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet.sk");
-                subscribe("test");
+                //subscribe("test");
                 Boolean boo = false, foo = true;
                 Looper.prepare();
                 while (true) {
@@ -393,6 +414,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 dataSnap = dataSnapshot;
 
+                if (Facebook.isLogged() == false) return;
+
                 MainActivity.nickname = dataSnapshot.child("settings/nickname").getValue().toString();
                 if (nickname.equals("")){
                     MainActivity.nickname = dataSnapshot.getKey().split("@")[0];
@@ -415,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 if (dataSnapshot.hasChild("settings/days_before")) {
                     int days_before = Integer.decode(dataSnapshot.child("settings/days_before").getValue().toString());
-                    Toast.makeText(MainActivity.this, "dni pred = " + days_before, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "dni pred = " + days_before, Toast.LENGTH_SHORT).show();
                     MainActivity.editor.putInt("days_before", days_before);
 
                 } else MainActivity.editor.putInt("days_before", 2);
@@ -728,9 +751,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public static float convertPixelsToDp(float px){
+        return px / ((float) ctx.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+    }
+
     private void showResults(String query) {
         editor.putString("search", query);
-        //setTitle("Search results");
         if (!Facebook.isLogged()) return;
         if (prefs.getString("class", "").contains("Movie")) {
             for (DetailsForSearch ds : MoviesResultSearch.detailsPool) {

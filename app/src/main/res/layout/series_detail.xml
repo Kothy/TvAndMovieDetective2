@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
 
 
     <ScrollView
@@ -61,6 +62,7 @@
                 android:paddingLeft="2dp"
                 android:paddingRight="2dp"
                 android:text="@string/empty"
+                android:textColor="@color/white"
                 android:textAlignment="viewStart"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -105,12 +107,11 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/round_rectangle"
-
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:text="@string/Episode_button"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.929"
                 app:layout_constraintStart_toEndOf="@+id/remove_from_favourite"
                 app:layout_constraintTop_toBottomOf="@+id/series_rating_bar" />
@@ -204,7 +205,7 @@
                 android:background="@drawable/round_rectangle"
                 android:gravity="center_vertical"
                 android:padding="4dp"
-                android:text="Last Air Date"
+                android:text="Last air date"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
