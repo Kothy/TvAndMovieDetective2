@@ -481,6 +481,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
     }
+    public static void unsubscribe(String topicName){
+        FirebaseMessaging.getInstance().subscribeToTopic(editMail(topicName))
+                .addOnCompleteListener(task -> {
+                    String mail = MainActivity.prefs.getString("login", "")
+                            .replace(".", "_");
+            if (!task.isSuccessful()) {
+                unsubscribe(topicName);
+            } else {
+                Log.d("Unsubscribe",mail + " unsubscribed topic " + editMail(topicName));
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference dbRef = database.getReference("/subscriptions/" + editMail(topicName) + "/" + mail);
+                dbRef.removeValue();
+
+            }
+        });
+    }
 
 
     private void checkIfExistFileAndUnpack() {

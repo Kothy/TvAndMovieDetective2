@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,8 +88,6 @@ public class Friends extends Fragment {
         MainActivity.editor.putString("search", "");
         items.clear();
         MainActivity.editor.apply();
-        //isVisibleFragment = false;
-
     }
 
     @Override
@@ -121,9 +120,6 @@ public class Friends extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-        }
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference("users/");
 
@@ -133,7 +129,6 @@ public class Friends extends Fragment {
                 myFriendsItems.clear();
                 data = dataSnapshot;
                 myFriendsRec.setVisibility(View.VISIBLE);
-                //if (isVisibleFragment == false) return;
                 friends.clear();
                 friendsEmails.clear();
                 for (DataSnapshot ds : data.child(maiil + "/settings/friends").getChildren()) {
@@ -143,6 +138,7 @@ public class Friends extends Fragment {
                     friends.add(ds.getValue().toString());
 
                 }
+                ArrayList<String> activity = new ArrayList<>();
 
                 for (DataSnapshot friend : dataSnapshot.getChildren()) { // all users
                     if (friend.hasChild("recent")) {
@@ -154,14 +150,26 @@ public class Friends extends Fragment {
                                 Long dateInMilisecs = Long.decode(recent.getKey());
                                 Date currDate = new Date(dateInMilisecs);
 
-                                HashMap<String, String> pair = new HashMap<>();
-                                pair.put("text", friends.get(index) + recent.getValue().toString());
-                                pair.put("date", sdf.format(currDate));
-                                friendsActivity.add(pair);
+                                activity.add(sdf.format(currDate) + ">" + friends.get(index) + recent.getValue().toString());
+
                             }
                         }
                     }
                 }
+                Collections.sort(activity);
+                friendsActivity.clear();
+
+                for (String act : activity){
+
+                    HashMap<String, String> pair = new HashMap<>();
+                    String[] separateAct = act.split(">");
+                    pair.put("text", separateAct[1]);
+                    pair.put("date", separateAct[0]);
+
+                    friendsActivity.add(pair);
+                }
+
+
                 simpleAdapter.notifyDataSetChanged();
                 recentFriendsActivityLv.invalidate();
 

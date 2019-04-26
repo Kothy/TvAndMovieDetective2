@@ -1,6 +1,7 @@
 package com.example.klaud.tvandmoviedetective.Adapters;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -14,10 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Items.FriendsItem;
+import com.example.klaud.tvandmoviedetective.MainActivity;
 import com.example.klaud.tvandmoviedetective.R;
 import com.example.klaud.tvandmoviedetective.Fragments.UserProfile;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -48,7 +53,6 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.ViewHo
     public void onBindViewHolder(MyFriendAdapter.ViewHolder holder, int position) {
         holder.nickname.setText(items.get(position).nickname);
         holder.parentLayout.setOnClickListener(click -> {
-            //Toast.makeText(contex, "presmerovanie na nahlad pouyivatela", Toast.LENGTH_SHORT).show();
 
             Fragment fragment;
             fragment = new UserProfile();
@@ -65,6 +69,29 @@ public class MyFriendAdapter extends RecyclerView.Adapter<MyFriendAdapter.ViewHo
             }
             DrawerLayout drawer = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
+        });
+
+        holder.parentLayout.setOnLongClickListener((click) -> {
+            String mail = MainActivity.mail.replace(".", "_");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(contex);
+            builder.setMessage("Are you sure you want to unfollow "+ items.get(position).nickname + "?")
+                    .setCancelable(false)
+                    .setNegativeButton("No", (dialog, id) -> dialog.cancel())
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        Toast.makeText(contex, "odstranenie kamosa", Toast.LENGTH_SHORT).show();
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference dbRef = database.getReference("users/" + mail + "/settings/friends/"
+                                + items.get(position).email.replace(".","_"));
+                        dbRef.removeValue();
+                        MainActivity.unsubscribe(items.get(position).email);
+                        items.remove(position);
+
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+            return true;
         });
     }
 
