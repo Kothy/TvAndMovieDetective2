@@ -384,9 +384,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         ft.replace(R.id.content_frame, new EmptyFragment());
                         ft.commit();
                         foo = false;
-                        setTitle("No internet connection");
-                        appbar.setVisibility(View.INVISIBLE);
-                        Snackbar.make(mainLay, "No internet connection", Snackbar.LENGTH_LONG).show();
+                        //setTitle("No internet connection");
+                        //appbar.setVisibility(View.INVISIBLE);
+                        //Snackbar.make(mainLay, "No internet connection", Snackbar.LENGTH_LONG).show();
                     } else if (isInternet()) boo = false;
 
                     if (MainActivity.mail == null)
