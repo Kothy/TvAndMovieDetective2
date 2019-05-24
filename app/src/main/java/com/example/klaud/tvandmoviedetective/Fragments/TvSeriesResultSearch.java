@@ -328,21 +328,6 @@ public class TvSeriesResultSearch extends Fragment {
             if (tvAir.size() > 0) displayList2();
             else getJsonAiring.execute();
         }
-        /*lv.setOnItemClickListener((AdapterView<?> adapt, View viev, int pos, long arg3) -> {
-            Fragment fragment = null;
-            fragment = new SeriesDetails();
-            Bundle bundle = new Bundle();
-            bundle.putString("id", aList.get(pos).get("id"));
-            fragment.setArguments(bundle);
-            if (fragment != null) {
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.content_frame, fragment);
-                ft.commit();
-            }
-            DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-        });*/
-
     }
 
     public void displayList() {
