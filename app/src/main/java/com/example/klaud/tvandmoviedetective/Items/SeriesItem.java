@@ -8,6 +8,7 @@ public class SeriesItem {
     private int image_drawable;
     private int id;
     private String poster_path;
+    private Boolean empty = false;
 
     public SeriesItem(String nam, int img, int idd) {
         name = nam;
@@ -18,6 +19,12 @@ public class SeriesItem {
     public String getPoster_path() {
         return poster_path;
     }
+
+    public Boolean getEmpty() { return empty; }
+
+    public void setEmptyTrue(){ empty = true; }
+
+    public void setEmptyFalse(){ empty = false; }
 
     public void setPoster_path(String poster_path) {
         this.poster_path = poster_path;

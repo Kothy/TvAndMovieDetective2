@@ -17,9 +17,7 @@ public class SendNotification extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... strings) {
 
-
         OkHttpClient client = new OkHttpClient();
-
         MediaType mediaType = MediaType.parse("application/json");
 
         RequestBody body = RequestBody.create(mediaType, strings[0]);
@@ -29,7 +27,6 @@ public class SendNotification extends AsyncTask<String, String, String> {
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "key=AIzaSyA6lAr4jnly1EtHpNfB1i_8Z12EcUvAudg")
                 .build();
-
         try {
             Response response = client.newCall(request).execute();
             Log.d("FNotif", response.body().string());

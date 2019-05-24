@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -137,13 +138,13 @@ public class MyMoviesAdapter extends RecyclerView.Adapter<MyMoviesAdapter.ViewHo
 
         TextView time;
         ImageView iv;
-        LinearLayout parentLayout;
+        ConstraintLayout parentLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.tvTitle);
             iv = (ImageView) itemView.findViewById(R.id.itemImage);
-            parentLayout = (LinearLayout) itemView.findViewById(R.id.parent_layoutItem);
+            parentLayout = (ConstraintLayout) itemView.findViewById(R.id.const_parent_lay55);
             if (resize) {
                 iv.getLayoutParams().height = 180;
                 iv.getLayoutParams().width = 160;

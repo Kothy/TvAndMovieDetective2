@@ -41,10 +41,10 @@ public class EpisodeViewHolder extends ChildViewHolder {
         date.setText(sdf.format(episode.airDate));
         if (prod.checked) iv.setImageResource(R.drawable.checked);
         else iv.setImageResource(R.drawable.unchecked);
-        view.setOnClickListener(click -> {
+        /*view.setOnClickListener(click -> {
             Toast.makeText(MainActivity.ctx, "bude presmerovanie na popis epizody", Toast.LENGTH_SHORT).show();
 
-        });
+        });*/
         iv.setOnClickListener(click -> {
             //Toast.makeText(MainActivity.ctx, episode.name+ " "+ episode.company, Toast.LENGTH_SHORT).show();
             if (prod.airDate.getTime() > System.currentTimeMillis()) {

@@ -138,7 +138,6 @@ public class Episodes extends Fragment {
                         Log.d("seasonsAndEps", episodes.size() + "");
                         Log.d("seasonsAndEps", "------------------------------------------------------------");
                     }
-
                 }
                 adapter = new EpisodeAdapter(companies);
                 recyclerView.setAdapter(adapter);
@@ -148,7 +147,6 @@ public class Episodes extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
         }
     };
 
@@ -171,8 +169,6 @@ public class Episodes extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerviewEp);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ctx = getContext();
-
-        //Toast.makeText(ctx, "prev class: "+ MainActivity.prefs.getString("prev class",""), Toast.LENGTH_SHORT).show();
 
         MainActivity.appbar.setVisibility(View.INVISIBLE);
     }

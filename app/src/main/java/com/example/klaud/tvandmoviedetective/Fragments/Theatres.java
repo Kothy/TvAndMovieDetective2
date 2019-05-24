@@ -22,8 +22,6 @@ import com.example.klaud.tvandmoviedetective.Adapters.TheatresAdapter;
 
 import java.util.ArrayList;
 
-;
-
 public class Theatres extends Fragment {
 
     public static Context ctx;

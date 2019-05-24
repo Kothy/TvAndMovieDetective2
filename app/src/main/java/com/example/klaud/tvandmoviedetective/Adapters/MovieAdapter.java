@@ -3,6 +3,7 @@ package com.example.klaud.tvandmoviedetective.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -94,13 +95,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         TextView time;
         ImageView iv;
-        LinearLayout parentLayout;
+        ConstraintLayout parentLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.tvTitle);
             iv = (ImageView) itemView.findViewById(R.id.itemImage);
-            parentLayout = (LinearLayout) itemView.findViewById(R.id.parent_layoutItem);
+            parentLayout = (ConstraintLayout) itemView.findViewById(R.id.const_parent_lay55);
 
         }
     }

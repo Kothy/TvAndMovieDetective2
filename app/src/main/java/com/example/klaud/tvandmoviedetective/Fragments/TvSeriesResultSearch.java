@@ -198,6 +198,18 @@ public class TvSeriesResultSearch extends Fragment {
         Collections.sort(found, compareJSONObject());
         aList.clear();
         searchedItems.clear();
+
+        if (found.size() == 0){
+            SeriesItem si = new SeriesItem("Search found nothing. :'(", R.drawable.nopicture, 0);
+            si.setEmptyTrue();
+            si.setPoster_path("null");
+            searchedItems.add(si);
+            searchRecycler.invalidate();
+            searchAdapter.notifyDataSetChanged();
+            return;
+        }
+
+
         for (JSONObject js : found) {
             Log.d("Hladanie", js.toString());
             SeriesItem si = new SeriesItem(js.getString("original_name"),

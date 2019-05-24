@@ -25,6 +25,7 @@ import com.example.klaud.tvandmoviedetective.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 ;
 
@@ -60,8 +61,6 @@ public class ResultSearchAdapter extends RecyclerView.Adapter<ResultSearchAdapte
         return holder;
     }
 
-
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.time.setText(items.get(position).getName());
@@ -77,6 +76,8 @@ public class ResultSearchAdapter extends RecyclerView.Adapter<ResultSearchAdapte
             Picasso.get().load(url).into(holder.iv);
         }
         holder.parentLayout.setOnClickListener(click -> {
+            if (items.get(position).getEmpty() == true) return;
+
             for (DetailsForSearch ds : MoviesResultSearch.detailsPool) {
                 ds.cancel(true);
             }

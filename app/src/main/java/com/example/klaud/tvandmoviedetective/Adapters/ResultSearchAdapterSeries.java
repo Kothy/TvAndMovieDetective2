@@ -57,9 +57,19 @@ public class ResultSearchAdapterSeries extends RecyclerView.Adapter<ResultSearch
         return holder;
     }
 
+    private String capitalize(String stri){
+        String[] words = stri.split(" ");
+        for (int i = 0; i < words.length; i++) {
+            if (words[i].length() > 1){
+                words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1);
+            }
+        }
+        return android.text.TextUtils.join(" ", words);
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.time.setText(items.get(position).getName());
+        holder.time.setText(capitalize(items.get(position).getName()));
         if (items.get(position).release_date == null) {
             holder.year.setText("");
         } else holder.year.setText(items.get(position).release_date);
@@ -71,6 +81,7 @@ public class ResultSearchAdapterSeries extends RecyclerView.Adapter<ResultSearch
             Picasso.get().load(url).into(holder.iv);
         }
         holder.parentLayout.setOnClickListener(click -> {
+            if (items.get(position).getEmpty() == true) return;
             //Toast.makeText(contex, items.get(position).getPoster_path(), Toast.LENGTH_SHORT).show();
             for (DetailsForSearch ds : TvSeriesResultSearch.searchPool) {
                 ds.cancel(true);

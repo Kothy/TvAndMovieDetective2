@@ -15,8 +15,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.example.klaud.tvandmoviedetective.Adapters.CastAdapter;
+import com.example.klaud.tvandmoviedetective.Adapters.FriendsActivityAdapter;
 import com.example.klaud.tvandmoviedetective.Adapters.FriendsAdapter;
 import com.example.klaud.tvandmoviedetective.Adapters.MyFriendAdapter;
+import com.example.klaud.tvandmoviedetective.Items.CastItem;
 import com.example.klaud.tvandmoviedetective.Items.FriendsItem;
 import com.example.klaud.tvandmoviedetective.MainActivity;
 import com.example.klaud.tvandmoviedetective.R;
@@ -32,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Friends extends Fragment {
     public static Context ctx;
@@ -48,6 +52,9 @@ public class Friends extends Fragment {
     ArrayList<String> friends = new ArrayList<>();
     ArrayList<String> friendsEmails = new ArrayList<>();
     SimpleAdapter simpleAdapter;
+    public static ArrayList<CastItem> castItem = new ArrayList<>();
+    public static FriendsActivityAdapter activityAdapter;
+    public static RecyclerView activityRecycler;
 
     public static void searchResult(String query) {
         items.clear();
@@ -66,7 +73,6 @@ public class Friends extends Fragment {
 
                     items.add(new FriendsItem(ds.getKey(), ds.getKey().split("@")[0]));
                 }
-
             }
             adapter.notifyDataSetChanged();
             recycler.invalidate();
@@ -115,6 +121,11 @@ public class Friends extends Fragment {
         adapter2 = new MyFriendAdapter(ctx, myFriendsItems, getFragmentManager(), getActivity());
         myFriendsRec.setAdapter(adapter2);
         myFriendsRec.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        activityRecycler = (RecyclerView) getView().findViewById(R.id.friends_activity_recycler);
+        activityAdapter = new FriendsActivityAdapter(getContext(), castItem);
+        activityRecycler.setAdapter(activityAdapter);
+        activityRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     @Override
@@ -138,7 +149,10 @@ public class Friends extends Fragment {
                     friends.add(ds.getValue().toString());
 
                 }
-                ArrayList<String> activity = new ArrayList<>();
+                //ArrayList<String> activity = new ArrayList<>();
+                //ArrayList<Long> activities = new ArrayList<>();
+
+                TreeMap<Long, CastItem> acti = new TreeMap<>();
 
                 for (DataSnapshot friend : dataSnapshot.getChildren()) { // all users
                     if (friend.hasChild("recent")) {
@@ -150,28 +164,33 @@ public class Friends extends Fragment {
                                 Long dateInMilisecs = Long.decode(recent.getKey());
                                 Date currDate = new Date(dateInMilisecs);
 
-                                activity.add(sdf.format(currDate) + ">" + friends.get(index) + recent.getValue().toString());
-
+                                //activities.add(dateInMilisecs);
+                                acti.put(dateInMilisecs, new CastItem(friends.get(index) + recent.getValue().toString(), sdf.format(currDate)));
+                                //activity.add(sdf.format(currDate) + ">" + friends.get(index) + recent.getValue().toString());
                             }
                         }
                     }
                 }
-                Collections.sort(activity);
+                //Collections.sort(activity);
                 friendsActivity.clear();
+                castItem.clear();
 
-                for (String act : activity){
+                for (CastItem ci : acti.values()){
 
-                    HashMap<String, String> pair = new HashMap<>();
-                    String[] separateAct = act.split(">");
+                    //String[] separateAct = act.split(">");
+                    /*HashMap<String, String> pair = new HashMap<>();
                     pair.put("text", separateAct[1]);
                     pair.put("date", separateAct[0]);
-
-                    friendsActivity.add(pair);
+                    friendsActivity.add(pair);*/
+                    //castItem.add(new CastItem(separateAct[1], separateAct[0]));
+                    castItem.add(ci);
                 }
+                Collections.reverse(castItem);
+                activityAdapter.notifyDataSetChanged();
+                activityRecycler.invalidate();
 
-
-                simpleAdapter.notifyDataSetChanged();
-                recentFriendsActivityLv.invalidate();
+                //simpleAdapter.notifyDataSetChanged();
+                //recentFriendsActivityLv.invalidate();
 
                 adapter2.notifyDataSetChanged();
                 myFriendsRec.invalidate();

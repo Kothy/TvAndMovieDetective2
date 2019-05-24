@@ -9,8 +9,6 @@ public class SeriesReceiver  extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //Snackbar.make(MainActivity.mainLay, "Idem zobrazit: " + intent.getStringExtra("title"), Snackbar.LENGTH_SHORT).show();
-
         MainActivity.editor.putString("openFrag", "series");
         MainActivity.editor.putString("openFragTitle",intent.getStringExtra("title"));
         MainActivity.editor.putString("openFragId", intent.getStringExtra("id"));
@@ -21,10 +19,5 @@ public class SeriesReceiver  extends BroadcastReceiver {
 
         Intent it = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         context.sendBroadcast(it);
-    }
-
-
-    public void displaySeries(){
-        Toast.makeText(MainActivity.ctx, "Zobraz serial", Toast.LENGTH_SHORT).show();
     }
 }

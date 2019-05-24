@@ -7,12 +7,19 @@ public class MovieItem {
     private int image_drawable;
     private int id;
     private String poster_path;
+    private Boolean empty = false;
 
     public MovieItem(String nam, int img, int idd) {
         name = nam;
         image_drawable = img;
         id = idd;
     }
+
+    public void setEmptyTrue(){ empty = true; }
+
+    public void setEmptyFalse(){ empty = false; }
+
+    public Boolean getEmpty() { return empty; }
 
     public String getPoster_path() {
         return poster_path;

@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.klaud.tvandmoviedetective.Adapters.CastAdapter;
+import com.example.klaud.tvandmoviedetective.Items.CastItem;
 import com.example.klaud.tvandmoviedetective.Others.ArrayCast;
 import com.example.klaud.tvandmoviedetective.Others.Cast;
 import com.example.klaud.tvandmoviedetective.Others.Crew;
@@ -61,12 +65,12 @@ public class SeriesDetails extends Fragment {
             ratingTitleTv;
     ScrollView sv;
     Integer Id = 0;
-    ListView castLv;
+    //ListView castLv;
     Integer numOfSeasons = 0;
     JSONObject jsonSeries = null;
     ArrayCast castAndCrew = null;
-    SimpleAdapter adapter;
-    ArrayList<Map<String, String>> pairs = new ArrayList<Map<String, String>>();
+    //SimpleAdapter adapter;
+    //ArrayList<Map<String, String>> pairs = new ArrayList<Map<String, String>>();
     Button episodesButt, addToFavouriteButton, removeFromFavourite;
     String title, poster_path, televisons;
     TreeMap<Integer, Integer> seasonsAndEpisodes = new TreeMap<>();
@@ -76,6 +80,10 @@ public class SeriesDetails extends Fragment {
     Boolean run = true;
     ProgressDialog progressDialog;
     static Boolean first;
+    public ArrayList<CastItem> castItem = new ArrayList<>();
+    public CastAdapter castAdapter;
+    public RecyclerView castRecycler;
+
     AsyncTask<String, Integer, String> getJsonString = new AsyncTask<String, Integer, String>() {
         @Override
         protected void onPreExecute() {
@@ -235,25 +243,30 @@ public class SeriesDetails extends Fragment {
         }
 
         protected void onPostExecute(String result) {
-            pairs.clear();
+            //pairs.clear();
+            castItem.clear();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             castAndCrew = gson.fromJson(result, ArrayCast.class);
             for (Cast c : castAndCrew.cast) {
                 if (!c.character.contains("uncredited") && !c.character.contains("On-Set")) {
-                    HashMap<String, String> item = new HashMap<String, String>();
-                    item.put("actor", c.name);
-                    item.put("role", c.character);
-                    pairs.add(item);
+                    //HashMap<String, String> item = new HashMap<String, String>();
+                    //item.put("actor", c.name);
+                    //item.put("role", c.character);
+                    castItem.add(new CastItem(c.name, c.character));
+                    //pairs.add(item);
                 }
             }
             for (Crew c : castAndCrew.crew) {
-                HashMap<String, String> item = new HashMap<String, String>();
-                item.put("actor", c.name);
-                item.put("role", c.job);
-                pairs.add(item);
+                //HashMap<String, String> item = new HashMap<String, String>();
+                //item.put("actor", c.name);
+                //item.put("role", c.job);
+                //pairs.add(item);
+                castItem.add(new CastItem(c.name, c.job));
             }
-            adapter.notifyDataSetChanged();
-            castLv.invalidate();
+            //adapter.notifyDataSetChanged();
+            castAdapter.notifyDataSetChanged();
+            castRecycler.invalidate();
+            //castLv.invalidate();
         }
     };
 
@@ -301,19 +314,24 @@ public class SeriesDetails extends Fragment {
         ratingBar.setVisibility(View.GONE);
         myRatingTitleTv.setVisibility(View.GONE);
 
-        castLv = view.findViewById(R.id.listVCast5);
-        castLv.setFocusable(false);
+        //castLv = view.findViewById(R.id.listVCast5);
+        //castLv.setFocusable(false);
         sv = view.findViewById(R.id.scrollView20);
         addToFavouriteButton = view.findViewById(R.id.button7);
         removeFromFavourite = view.findViewById(R.id.remove_from_favourite);
         removeFromFavourite.setVisibility(View.INVISIBLE);
 
+        castRecycler = (RecyclerView) getView().findViewById(R.id.cast_series_recycler);
+        castAdapter = new CastAdapter(getContext(), castItem);
+        castRecycler.setAdapter(castAdapter);
+        castRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+
         sv.setOnTouchListener((vie, event) -> {
             tv.getParent().requestDisallowInterceptTouchEvent(false);
             return false;
         });
-        castLv.setOnTouchListener((vie, event) -> {
-            castLv.getParent().requestDisallowInterceptTouchEvent(true);
+        castRecycler.setOnTouchListener((vie, event) -> {
+            castRecycler.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
 
@@ -375,10 +393,10 @@ public class SeriesDetails extends Fragment {
             childUpdates.put(System.currentTimeMillis() + "", " rated " + title + " " + num);
             dbRef.updateChildren(childUpdates);
 
-            /*if (MainActivity.sendMessages() == false){
+            if (MainActivity.sendNotifToFriends == false){
                 Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
                 return;
-            }*/
+            }
 
             //MainActivity.subscribe("test");
 
@@ -431,12 +449,12 @@ public class SeriesDetails extends Fragment {
             childUpdates.put(System.currentTimeMillis() + "", " mark " + title + " as his/her favourite show");
             dbRef.updateChildren(childUpdates);
         });
-        pairs.clear();
+        //pairs.clear();
         seriesPoster = view.findViewById(R.id.imageView20);
-        String[] from = {"actor", "role"};// symbolické mená riadkov
-        int[] to = {android.R.id.text1, android.R.id.text2};
-        adapter = new SimpleAdapter(getContext(), pairs, android.R.layout.simple_list_item_2, from, to);
-        castLv.setAdapter(adapter);
+        //String[] from = {"actor", "role"};// symbolické mená riadkov
+        //int[] to = {android.R.id.text1, android.R.id.text2};
+        //adapter = new SimpleAdapter(getContext(), pairs, android.R.layout.simple_list_item_2, from, to);
+        //castLv.setAdapter(adapter);
 
         episodesButt = view.findViewById(R.id.button6);
         episodesButt.setOnClickListener(click -> {

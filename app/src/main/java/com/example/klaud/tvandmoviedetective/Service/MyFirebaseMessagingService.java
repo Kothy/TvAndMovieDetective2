@@ -45,12 +45,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             resultIntent.putExtra("is_movie", isMovie);
             resultIntent.putExtra("friend_name", friend);
 
-
             int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.ctx, uniqueInt, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             sendNotif(text, notTitle, pendingIntent);
         }
-
     }
 
     public void sendNotif(String notTitle, String text, PendingIntent pendingIntent){
@@ -59,7 +57,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.ic_search_black_24dp)
                 .setContentTitle(notTitle)
                 .setContentText(text)
-                //.addAction(R.drawable.ic_movie_black_24dp, "Details", pendingIntent)
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
@@ -83,15 +80,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        //final String TAG = "TestMess";
-
-        /*if (MainActivity.receiveMessages() == false) {
-            Toast.makeText(this, "Receive notif is switched off", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-
+        if (MainActivity.receiveNotifFromFriends == false) return;
         if (remoteMessage.getData().size() > 0) {
-            //Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             String id = remoteMessage.getData().get("id");
             String rate = remoteMessage.getData().get("rate");
             String title = remoteMessage.getData().get("title");

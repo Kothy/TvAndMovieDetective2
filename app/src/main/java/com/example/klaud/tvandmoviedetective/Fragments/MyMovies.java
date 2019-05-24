@@ -68,7 +68,8 @@ public class MyMovies extends Fragment {
                 items.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("status").getValue().toString().equals("want")) {
-                        MovieItem mi = new MovieItem(ds.child("title").getValue().toString(), R.drawable.nopicture, Integer.decode(ds.getKey()));
+                        MovieItem mi = new MovieItem(ds.child("title").getValue().toString(),
+                                R.drawable.nopicture, Integer.decode(ds.getKey()));
                         if (!ds.child("poster_path").getValue().toString().equals("null")) {
                             mi.setPoster_path(ds.child("poster_path").getValue().toString());
                         }
@@ -79,7 +80,6 @@ public class MyMovies extends Fragment {
                 adapter.notifyDataSetChanged();
                 recycler.invalidate();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }

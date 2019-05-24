@@ -33,7 +33,6 @@ public class GetHTMLTreeProgram extends AsyncTask<String, Integer, String> {
             Element body = doc.body();
             Theatres.items.clear();
             String date = "";
-            //Theatres.noProgram.setVisibility(View.INVISIBLE);
             for (Element e : body.getElementsByTag("div")) {
                 if (e.hasClass("place-premieres-head")) {
                     String[] arr = e.text().split("-");

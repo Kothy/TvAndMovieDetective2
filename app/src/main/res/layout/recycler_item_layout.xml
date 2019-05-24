@@ -1,46 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView4"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="@drawable/rectangle"
     android:orientation="horizontal"
     app:cardElevation="1dp"
-    app:cardUseCompatPadding="true"
-    android:background="@drawable/rectangle"> <!--app:cardCornerRadius="5dp" ak by som chcela zahnute rohy na kartickach-->
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:id="@+id/parent_layoutItem"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/const_parent_lay55"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/darkGray"
-        android:orientation="vertical"
-        android:padding="0dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/itemImage"
             android:layout_width="110dp"
-            android:layout_height="160dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="fitXY"
-            android:src="@drawable/avengers" />
+            android:layout_height="165dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/itemImage2"
-            android:gravity="start"
+            android:lines="2"
             android:maxLines="2"
-            android:minLines="2"
-            android:padding="5dp"
-            android:text="Sample title"
-            android:textSize="12dp"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/black"
-            />
-
-    </LinearLayout>
-
+            android:textSize="13dp"
+            android:textColor="@color/black"
+            android:padding="3dp"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemImage" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
 
 

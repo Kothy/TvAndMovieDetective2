@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Adapters.MovieAdapter;
 import com.example.klaud.tvandmoviedetective.Adapters.ResultSearchAdapter;
@@ -206,6 +207,15 @@ public class MoviesResultSearch extends Fragment {
                 }
             }
             searchedItems.clear();
+            if (found.size() == 0){
+                MovieItem mi = new MovieItem("Search found nothing. :'(", R.drawable.nopicture, 0);
+                mi.setEmptyTrue();
+                mi.setPoster_path("null");
+                searchedItems.add(mi);
+                adapter3.notifyDataSetChanged();
+                recycler3.invalidate();
+                return;
+            }
             Collections.sort(found, compareJSONObject());
             //lv.setVisibility(View.INVISIBLE);
             for (JSONObject js : found) {

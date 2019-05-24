@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,10 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.klaud.tvandmoviedetective.Adapters.CastAdapter;
+import com.example.klaud.tvandmoviedetective.Adapters.MovieAdapter;
+import com.example.klaud.tvandmoviedetective.Items.CastItem;
+import com.example.klaud.tvandmoviedetective.Items.MovieItem;
 import com.example.klaud.tvandmoviedetective.Others.ArrayCast;
 import com.example.klaud.tvandmoviedetective.Others.Cast;
 import com.example.klaud.tvandmoviedetective.Others.Crew;
@@ -59,11 +65,11 @@ public class MovieDetail extends Fragment {
     ScrollView sv;
     Integer movieId = 0;
     String title = "", poster_path;
-    ListView castLv;
+    //ListView castLv;
     JSONObject jsonMovie = null;
     ArrayCast castAndCrew = null;
-    SimpleAdapter adapter;
-    ArrayList<Map<String, String>> pairs = new ArrayList<Map<String, String>>();
+    //SimpleAdapter adapter;
+    //ArrayList<Map<String, String>> pairs = new ArrayList<Map<String, String>>();
     Button watchedButton, wantToWatchButton;
     RatingBar ratingBar;
     Boolean run = true, notInCinemasYet = true;
@@ -72,6 +78,9 @@ public class MovieDetail extends Fragment {
     ProgressDialog progressDialog;
     Date release_date;
     static Boolean first;
+    public ArrayList<CastItem> castItem = new ArrayList<>();
+    public CastAdapter castAdapter;
+    public RecyclerView castRecycler;
 
     AsyncTask<String, Integer, String> getJsonString = new AsyncTask<String, Integer, String>() {
         @Override
@@ -209,7 +218,8 @@ public class MovieDetail extends Fragment {
         }
 
         protected void onPostExecute(String result) {
-            pairs.clear();
+            //pairs.clear();
+            castItem.clear();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             castAndCrew = gson.fromJson(result, ArrayCast.class);
             for (Cast c : castAndCrew.cast) {
@@ -217,20 +227,23 @@ public class MovieDetail extends Fragment {
                     HashMap<String, String> item = new HashMap<String, String>();
                     item.put("actor", c.name);
                     item.put("role", c.character);
-                    pairs.add(item);
+                    //pairs.add(item);
+                    castItem.add(new CastItem(c.name, c.character));
                 }
             }
             for (Crew c : castAndCrew.crew) {
                 HashMap<String, String> item = new HashMap<String, String>();
                 if (c.job.equals("Director") || c.job.equals("Screenplay")) {
-                    item.put("actor", c.name);
-                    item.put("role", c.job);
-                    pairs.add(item);
+                    //item.put("actor", c.name);
+                    //item.put("role", c.job);
+                    //pairs.add(item);
+                    castItem.add(new CastItem(c.name, c.job));
                 }
             }
-
-            adapter.notifyDataSetChanged();
-            castLv.invalidate();
+            castAdapter.notifyDataSetChanged();
+            castRecycler.invalidate();
+            //adapter.notifyDataSetChanged();
+            //castLv.invalidate();
         }
     };
 
@@ -279,8 +292,8 @@ public class MovieDetail extends Fragment {
         tv_my_rating = view.findViewById(R.id.textView11);
         tv_length = view.findViewById(R.id.length_tv);
         tv_genre_title = view.findViewById(R.id.textView2);
-        castLv = view.findViewById(R.id.listVCast);
-        castLv.setFocusable(false);
+        //castLv = view.findViewById(R.id.listVCast);
+        //castLv.setFocusable(false);
         sv = view.findViewById(R.id.scrollView2);
         watchedButton = view.findViewById(R.id.button3);
         watchedButton.setVisibility(View.VISIBLE);
@@ -291,6 +304,11 @@ public class MovieDetail extends Fragment {
         inList = view.findViewById(R.id.inList);
 
         first = true;
+
+        castRecycler = (RecyclerView) getView().findViewById(R.id.castRecycler);
+        castAdapter = new CastAdapter(getContext(), castItem);
+        castRecycler.setAdapter(castAdapter);
+        castRecycler.setLayoutManager(new LinearLayoutManager(this.getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         dbRef = database.getReference("users/" + maiil + "/movies");
@@ -344,8 +362,7 @@ public class MovieDetail extends Fragment {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
 
 
@@ -382,10 +399,10 @@ public class MovieDetail extends Fragment {
             //MainActivity.subscribe("test");
             //Toast.makeText(ctx, "Message sent to all your friend " + regId, Toast.LENGTH_SHORT).show();
 
-            /*if (MainActivity.sendMessages() == false){
+            if (MainActivity.sendNotifToFriends == false){
                 Toast.makeText(ctx, "Sending messages switched off", Toast.LENGTH_SHORT).show();
                 return;
-            }*/
+            }
 
             try {
                 JSONObject mainJson = new JSONObject();
@@ -462,16 +479,16 @@ public class MovieDetail extends Fragment {
             return false;
         });
 
-        castLv.setOnTouchListener((vie, event) -> {
-            castLv.getParent().requestDisallowInterceptTouchEvent(true);
+        castRecycler.setOnTouchListener((vie, event) -> {
+            castRecycler.getParent().requestDisallowInterceptTouchEvent(true);
             return false;
         });
 
-        pairs.clear();
-        String[] from = {"actor", "role"};// symbolické mená riadkov
-        int[] to = {android.R.id.text1, android.R.id.text2};
-        adapter = new SimpleAdapter(getContext(), pairs, android.R.layout.simple_list_item_2, from, to);
-        castLv.setAdapter(adapter);
+        //pairs.clear();
+        //String[] from = {"actor", "role"};// symbolické mená riadkov
+        //int[] to = {android.R.id.text1, android.R.id.text2};
+        //adapter = new SimpleAdapter(getContext(), pairs, android.R.layout.simple_list_item_2, from, to);
+        //castLv.setAdapter(adapter);
         MainActivity.viewPager.setVisibility(View.GONE);
         MainActivity.tabLayout.setVisibility(View.GONE);
 

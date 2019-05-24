@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,8 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
-//import android.widget.Toast;
 
 import com.example.klaud.tvandmoviedetective.Adapters.ViewPagerAdapter;
 import com.example.klaud.tvandmoviedetective.Fragments.EmptyFragment;
@@ -114,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ConstraintLayout mainLay;
     Boolean isEmptyFragVisible = false;
     DatabaseReference dbRef;
+    public static Boolean sendNotifToFriends = true;
+    public static Boolean receiveNotifFromFriends = true;
 
     AsyncTask<String, Integer, String> unpack = new AsyncTask<String, Integer, String>() {
         @Override
@@ -281,11 +280,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notificationManager = getSystemService(NotificationManager.class);
         }
 
-        // spustenie periodickej práce
-        /*Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();*/
-
+        // spustenie periodickej práce -----------------------
         PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(BackService.class, 1, TimeUnit.MINUTES)
                 //.setConstraints(constraints)
                 .build();
@@ -309,7 +304,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pd.setCancelable(false);
         pd.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
-        //pd.setProgressStyle(android.R.style.Widget_DeviceDefault_Light_ProgressBar_Large);
         pd.setMax(100);
 
         prefs = getSharedPreferences("INFO", MODE_PRIVATE);
@@ -356,10 +350,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             opennigFragment();
             if (Facebook.isLogged()) {
                 if (MainActivity.prefs.getString("login", "").equals("")) {
-                    //Toast.makeText(ctx, "setujem z FACEBOOKU", Toast.LENGTH_SHORT).show();
                     Facebook.setMailToDrawer();
                 } else {
-                    //Toast.makeText(ctx, "setujem y preferencies", Toast.LENGTH_SHORT).show();
                     View headerView2 = MainActivity.navigationView.getHeaderView(0);
                     TextView navUsername2 = (TextView) headerView2.findViewById(R.id.drawerEmailTextView);
                     navUsername.setText(MainActivity.prefs.getString("login", ""));
@@ -370,23 +362,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         new Thread(new Runnable() {
             public void run() {
-                //FirebaseMessaging.getInstance().unsubscribeFromTopic("test");
-                //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet_sk");
-                //FirebaseMessaging.getInstance().unsubscribeFromTopic("kada11~azet.sk");
-                //subscribe("test");
                 Boolean boo = false, foo = true;
                 Looper.prepare();
                 while (true) {
                     if (isInternet() == false && boo == false) {
-                        //Toast.makeText(MainActivity.this, "toast", Toast.LENGTH_SHORT).show();
                         boo = true;
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.content_frame, new EmptyFragment());
                         ft.commit();
                         foo = false;
-                        //setTitle("No internet connection");
-                        //appbar.setVisibility(View.INVISIBLE);
-                        //Snackbar.make(mainLay, "No internet connection", Snackbar.LENGTH_LONG).show();
                     } else if (isInternet()) boo = false;
 
                     if (MainActivity.mail == null)
@@ -394,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (isInternet() && foo == false) {
                         opennigFragment();
                         foo = true;
-
                     }
                     try {
                         Thread.sleep(1000);
@@ -423,22 +406,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 if (dataSnapshot.hasChild("settings/send_notif")) {
                     if (dataSnapshot.child("settings/send_notif").getValue().equals("false")) {
-                        MainActivity.editor.putString("send_notif", false + "");
+                        sendNotifToFriends = false;
                     } else {
-                        MainActivity.editor.putString("send_notif", true + "");
+                        sendNotifToFriends = true;
                     }
+                    //Toast.makeText(MainActivity.this, "posielanie: "+sendNotifToFriends, Toast.LENGTH_SHORT).show();
                 }
 
                 if (dataSnapshot.hasChild("settings/receive_notif")) {
                     if (dataSnapshot.child("settings/receive_notif").getValue().equals("false")) {
-                        MainActivity.editor.putString("receive_notif", "false");
+                        receiveNotifFromFriends = false;
                     } else {
-                        MainActivity.editor.putString("receive_notif", "true");
+                        receiveNotifFromFriends = true;
                     }
+                    //Toast.makeText(MainActivity.this, "prijimanie: " + receiveNotifFromFriends, Toast.LENGTH_SHORT).show();
                 }
                 if (dataSnapshot.hasChild("settings/days_before")) {
                     int days_before = Integer.decode(dataSnapshot.child("settings/days_before").getValue().toString());
-                    //Toast.makeText(MainActivity.this, "dni pred = " + days_before, Toast.LENGTH_SHORT).show();
                     MainActivity.editor.putInt("days_before", days_before);
 
                 } else MainActivity.editor.putInt("days_before", 2);
@@ -476,8 +460,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             childUpdates.put(MainActivity.mail.replace(".", "_"), "*");
                             dbRef.updateChildren(childUpdates);
                         }
-
-
                     }
                 });
     }
@@ -494,11 +476,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference dbRef = database.getReference("/subscriptions/" + editMail(topicName) + "/" + mail);
                 dbRef.removeValue();
-
             }
         });
     }
-
 
     private void checkIfExistFileAndUnpack() {
         if (!fileExist(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -515,8 +495,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.printStackTrace();
                 Log.e("Receiver Error", e.getMessage());
             }
-            //if (unpack.getStatus() != AsyncTask.Status.RUNNING && (series.size() == 0 || movies.size() == 0))
-            //unpack.execute(st[0] + getYesterdayDate(), st[1] + getYesterdayDate(), "load", "load"); // iba nacitava reporty
 
             noInt.setVisibility(View.INVISIBLE);
             isEmptyFragVisible = false;
@@ -531,7 +509,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        //viewPager.setSaveFromParentEnabled(false);
         adapter.addFragment(new MyMovies(), "Wish list");
         adapter.addFragment(new MyMoviesWatched(), "Watch list");
 
@@ -579,7 +556,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Co sa stlaci v draweri - zobrazenie
-        //Toast.makeText(ctx, ""+(item.getItemId()==R.id.nav_myMovies), Toast.LENGTH_SHORT).show();
         if (Facebook.isLogged()) displaySelectedScreen(item.getItemId());
         return true;
     }
@@ -627,7 +603,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fragment = new Facebook();
         } else if (itemId == R.id.nav_myMovies) {
             setupViewPager(viewPager);
-            fragment = new EmptyFragment();
+            fragment = new MyMovies();
+            //fragment = new EmptyFragment();
+
         } else if (itemId == R.id.nav_myTv) {
             fragment = new MySeries();
         } else if (itemId == R.id.nav_theatres) {
@@ -731,7 +709,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         deleteAlllFilesInFolder(new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS) + "/Detective/"));
         for (int i = 0; i < 2; i++) {
-            Uri Download_Uri = Uri.parse("http://files.tmdb.org/p/exports/" + st[i] + getYesterdayDate() + ".json.gz");
+            Uri Download_Uri = Uri.parse("http://files.tmdb.org/p/exports/" + st[i]
+                    + getYesterdayDate() + ".json.gz");
             DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI
                     | DownloadManager.Request.NETWORK_MOBILE);
